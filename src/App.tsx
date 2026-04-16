@@ -103,9 +103,18 @@ export default function App() {
     return () => window.removeEventListener('click', handleClick);
   }, []);
 
-  // Handle music state based on lobby
+  // Handle music state and gameplay tracking based on lobby
   useEffect(() => {
     soundManager.setMusicState(inLobby);
+    
+    if (inLobby) {
+      // If we entered lobby, stop any gameplay tracking and notify load stopped
+      adManager.triggerLoadingStop();
+      adManager.triggerGameplayStop();
+    } else {
+      // If we left lobby to enter match
+      adManager.triggerGameplayStart();
+    }
   }, [inLobby]);
 
   // Handle match state sounds and ads

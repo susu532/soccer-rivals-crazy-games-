@@ -46,7 +46,7 @@ const isCrazyGamesDataAvailable = (): boolean => {
 };
 
 let sdkInitPromise: Promise<void> | null = null;
-const ensureCrazyGamesInit = async () => {
+export const ensureCrazyGamesInit = async () => {
   if (isCrazyGamesDataAvailable()) {
     if (!sdkInitPromise) {
       if (typeof window.CrazyGames!.SDK!.init === 'function') {
