@@ -11,6 +11,19 @@ import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
+import { adManager } from './utils/ads';
+
+// Boot CrazyGames SDK early and notify of loading
+if (typeof window !== 'undefined' && window.CrazyGames && window.CrazyGames.SDK) {
+  try {
+    if (typeof window.CrazyGames.SDK.init === 'function') {
+      window.CrazyGames.SDK.init().catch(() => {});
+    }
+  } catch (e) {
+    console.warn("SDK init failed", e);
+  }
+}
+adManager.triggerLoadingStart();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

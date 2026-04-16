@@ -4,28 +4,36 @@ export const adManager = {
       if (typeof window !== 'undefined' && window.CrazyGames?.SDK?.game?.loadingStart) {
         window.CrazyGames.SDK.game.loadingStart();
       }
-    } catch {}
+    } catch {
+      /* ignore */
+    }
   },
   triggerLoadingStop: () => {
     try {
       if (typeof window !== 'undefined' && window.CrazyGames?.SDK?.game?.loadingStop) {
         window.CrazyGames.SDK.game.loadingStop();
       }
-    } catch {}
+    } catch {
+      /* ignore */
+    }
   },
   triggerGameplayStart: () => {
     try {
       if (typeof window !== 'undefined' && window.CrazyGames?.SDK?.game?.gameplayStart) {
         window.CrazyGames.SDK.game.gameplayStart();
       }
-    } catch {}
+    } catch {
+      /* ignore */
+    }
   },
   triggerGameplayStop: () => {
     try {
       if (typeof window !== 'undefined' && window.CrazyGames?.SDK?.game?.gameplayStop) {
         window.CrazyGames.SDK.game.gameplayStop();
       }
-    } catch {}
+    } catch {
+      /* ignore */
+    }
   },
   triggerMidRoll: () => {
     console.log('[AdManager] Triggering Mid-roll Ad...');

@@ -12,12 +12,7 @@
     
     <title>Soccer Rivals | 3D Multiplayer Football</title>
     <script src="https://sdk.crazygames.com/crazygames-sdk-v3.js"></script>
-    <script>
-      // Immediately notify CrazyGames so the QA tool detects loading
-      if (window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.game) {
-        window.CrazyGames.SDK.game.loadingStart();
-      }
-    </script>
+    <script>window.CrazyGames.SDK.game.loadingStart();</script>
   </head>
   <body>
     <!-- Protection shield - loads before app -->
