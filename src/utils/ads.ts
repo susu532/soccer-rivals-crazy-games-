@@ -42,7 +42,7 @@ export const adManager = {
       if (SDKObj && SDKObj.code !== 'sdkNotInitialized' && SDKObj.code !== 'sdkDisabled') {
         const adObj = SDKObj.ad as Record<string, unknown>;
         if (adObj && typeof adObj.requestAd === 'function') {
-          adObj.requestAd('midroll', {
+          adObj.requestAd('midgame', {
             adStarted: () => console.log('Mid-roll started'),
             adFinished: () => console.log('Mid-roll finished'),
             adError: (e: unknown) => console.log('Mid-roll error', e)

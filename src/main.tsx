@@ -17,13 +17,21 @@ import { adManager } from './utils/ads';
 if (typeof window !== 'undefined' && window.CrazyGames && window.CrazyGames.SDK) {
   try {
     if (typeof window.CrazyGames.SDK.init === 'function') {
-      window.CrazyGames.SDK.init().catch(() => {});
+      window.CrazyGames.SDK.init().then(() => {
+        adManager.triggerLoadingStart();
+      }).catch(() => {
+        adManager.triggerLoadingStart();
+      });
+    } else {
+      adManager.triggerLoadingStart();
     }
   } catch (e) {
     console.warn("SDK init failed", e);
+    adManager.triggerLoadingStart();
   }
+} else {
+  adManager.triggerLoadingStart();
 }
-adManager.triggerLoadingStart();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
