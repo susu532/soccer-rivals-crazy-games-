@@ -16,9 +16,10 @@ interface GameOverTransitionProps {
   score: { red: number; blue: number };
   isWorldCup?: boolean;
   worldCupTeams?: { red: string; blue: string };
+  isPrivate?: boolean;
 }
 
-export function GameOverTransition({ message, score, isWorldCup, worldCupTeams }: GameOverTransitionProps) {
+export function GameOverTransition({ message, score, isWorldCup, worldCupTeams, isPrivate }: GameOverTransitionProps) {
   const isBlueWin = message.includes('BLUE') || (isWorldCup && worldCupTeams?.blue && message.includes(worldCupTeams.blue.toUpperCase()));
   const isRedWin = message.includes('RED') || (isWorldCup && worldCupTeams?.red && message.includes(worldCupTeams.red.toUpperCase()));
 
@@ -97,7 +98,9 @@ export function GameOverTransition({ message, score, isWorldCup, worldCupTeams }
         >
           <div className="flex items-center gap-3 bg-white/5 px-6 py-3 rounded-2xl border border-white/10 backdrop-blur-md">
             <div className="w-3 h-3 bg-vibrant-yellow rounded-full animate-pulse" />
-            <span className="text-white/80 font-black italic uppercase tracking-widest text-sm">Returning to Lobby</span>
+            <span className="text-white/80 font-black italic uppercase tracking-widest text-sm">
+              {isPrivate ? 'Preparing Next Match' : 'Returning to Lobby'}
+            </span>
           </div>
 
           <div className="w-64 h-1.5 bg-white/10 rounded-full overflow-hidden">
