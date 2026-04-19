@@ -41,6 +41,7 @@ export const MobileControls = React.memo(function MobileControls({ onMove, onSto
           <Joystick 
             size={joystickSize} 
             sticky={false} 
+             throttle={16}
             baseColor="rgba(255, 255, 255, 0.05)" 
             stickColor="rgba(0, 255, 255, 0.6)" 
             move={(e) => onMove(e.x || 0, e.y || 0)} 

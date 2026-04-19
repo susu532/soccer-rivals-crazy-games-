@@ -401,6 +401,7 @@ export default function App() {
           newKeys.kick = true;
           changed = true;
         }
+        if (changed) keysRef.current = newKeys;
         return changed ? newKeys : k;
       });
 
@@ -441,6 +442,7 @@ export default function App() {
           newKeys.kick = false;
           changed = true;
         }
+        if (changed) keysRef.current = newKeys;
         return changed ? newKeys : k;
       });
 
@@ -451,11 +453,17 @@ export default function App() {
     };
 
     const handleMouseDown = (e: MouseEvent) => {
-      if (e.button === 0) setKeys((k) => (k.kick ? k : { ...k, kick: true }));
+           if (e.button === 0) {
+        keysRef.current = { ...keysRef.current, kick: true };
+        setKeys((k) => (k.kick ? k : { ...k, kick: true }));
+      }
     };
 
     const handleMouseUp = (e: MouseEvent) => {
-      if (e.button === 0) setKeys((k) => (!k.kick ? k : { ...k, kick: false }));
+      if (e.button === 0) {
+        keysRef.current = { ...keysRef.current, kick: false };
+        setKeys((k) => (!k.kick ? k : { ...k, kick: false }));
+      }
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -517,7 +525,7 @@ export default function App() {
         // Auto-detect if the library is returning raw pixels (e.g. max 50) or normalized floats (e.g. max 1)
         const isNormalized = magnitude > 0 && magnitude <= 1.5;
         const radius = isNormalized ? 1 : (window.innerWidth < 640 ? 40 : 55);
-        const deadzone = isNormalized ? 0.1 : 5;
+        const deadzone = isNormalized ? 0.02 : 1.5;
 
         if (magnitude > deadzone) {
           // Normalize and scale to 0-1 range
@@ -544,7 +552,7 @@ export default function App() {
         jump: keysRef.current.jump,
         cameraAngle: angle,
       });
-    }, 1000 / 30); // Send input at 30fps
+}, 1000 / 60); // Send input at 60fps
 
     return () => clearInterval(interval);
   }, [inLobby, socket]);
@@ -564,10 +572,12 @@ export default function App() {
   }, []);
 
   const handleKick = React.useCallback((active: boolean) => {
+      keysRef.current = { ...keysRef.current, kick: active };
     setKeys((k) => ({ ...k, kick: active }));
   }, []);
 
   const handleJump = React.useCallback((active: boolean) => {
+    keysRef.current = { ...keysRef.current, jump: active };
     setKeys((k) => ({ ...k, jump: active }));
   }, []);
 
