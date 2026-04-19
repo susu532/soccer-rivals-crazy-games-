@@ -8,7 +8,7 @@
  * sell copies of the Software without explicit permission.
  */
 
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import { Scene } from "./components/Scene";
 import { Lobby } from "./components/Lobby";
@@ -554,6 +554,22 @@ export default function App() {
     return `${m}:${s.toString().padStart(2, "0")}`;
   };
 
+  const handleMove = React.useCallback((x: number, y: number) => {
+    joystickInputRef.current = { x, z: -y };
+  }, []);
+
+  const handleStop = React.useCallback(() => {
+    joystickInputRef.current = { x: 0, z: 0 };
+  }, []);
+
+  const handleKick = React.useCallback((active: boolean) => {
+    setKeys((k) => ({ ...k, kick: active }));
+  }, []);
+
+  const handleJump = React.useCallback((active: boolean) => {
+    setKeys((k) => ({ ...k, jump: active }));
+  }, []);
+
   const handleLeaveMatch = () => {
     if (socket) {
       socket.emit("leave");
@@ -812,14 +828,10 @@ export default function App() {
       {!inLobby &&
         (isTouchDevice || isMobileSize || settings.forceMobileControls) && (
           <MobileControls
-            onMove={(x, y) => {
-              joystickInputRef.current = { x, z: -y };
-            }}
-            onStop={() => {
-              joystickInputRef.current = { x: 0, z: 0 };
-            }}
-            onKick={(active) => setKeys((k) => ({ ...k, kick: active }))}
-            onJump={(active) => setKeys((k) => ({ ...k, jump: active }))}
+            onMove={handleMove}
+            onStop={handleStop}
+            onKick={handleKick}
+            onJump={handleJump}
           />
         )}
 
