@@ -45,17 +45,19 @@ export const adManager = {
         const adObj = SDKObj.ad as Record<string, unknown>;
         if (adObj && typeof adObj.requestAd === 'function') {
           adObj.requestAd('midgame', {
-            adStarted: () => {
-              console.log('Mid-roll started');
-              soundManager.setAdMuted(true);
-            },
-            adFinished: () => {
-              console.log('Mid-roll finished');
-              soundManager.setAdMuted(false);
-            },
-            adError: (e: unknown) => {
-              console.log('Mid-roll error', e);
-              soundManager.setAdMuted(false);
+            callbacks: {
+              adStarted: () => {
+                console.log('Mid-roll started');
+                soundManager.setAdMuted(true);
+              },
+              adFinished: () => {
+                console.log('Mid-roll finished');
+                soundManager.setAdMuted(false);
+              },
+              adError: (e: unknown) => {
+                console.log('Mid-roll error', e);
+                soundManager.setAdMuted(false);
+              }
             }
           });
           return;
@@ -73,20 +75,22 @@ export const adManager = {
         const adObj = SDKObj.ad as Record<string, unknown>;
         if (adObj && typeof adObj.requestAd === 'function') {
           adObj.requestAd('rewarded', {
-            adStarted: () => {
-              console.log('Rewarded started');
-              soundManager.setAdMuted(true);
-            },
-            adFinished: () => {
-              console.log('Rewarded finished');
-              soundManager.setAdMuted(false);
-              onReward();
-            },
-            adError: (e: unknown) => {
-              console.log('Rewarded error', e);
-              soundManager.setAdMuted(false);
-              // Grant reward anyway as fallback in case of adblock or dummy local SDK
-              onReward();
+            callbacks: {
+              adStarted: () => {
+                console.log('Rewarded started');
+                soundManager.setAdMuted(true);
+              },
+              adFinished: () => {
+                console.log('Rewarded finished');
+                soundManager.setAdMuted(false);
+                onReward();
+              },
+              adError: (e: unknown) => {
+                console.log('Rewarded error', e);
+                soundManager.setAdMuted(false);
+                // Grant reward anyway as fallback in case of adblock or dummy local SDK
+                onReward();
+              }
             }
           });
           return;
