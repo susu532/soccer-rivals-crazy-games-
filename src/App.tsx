@@ -90,15 +90,16 @@ export default function App() {
       try {
         const SDKObj =
           typeof window !== "undefined" && window.CrazyGames
-            ? (window.CrazyGames.SDK as any)
+            ? (window.CrazyGames.SDK as Record<string, unknown>)
             : null;
         if (
           SDKObj &&
           SDKObj.code !== "sdkNotInitialized" &&
           SDKObj.code !== "sdkDisabled"
         ) {
-          if (SDKObj.game && typeof SDKObj.game.getInviteParam === "function") {
-            roomIdFromParams = SDKObj.game.getInviteParam("roomId");
+          const gameObj = SDKObj.game as Record<string, unknown>;
+          if (gameObj && typeof gameObj.getInviteParam === "function") {
+            roomIdFromParams = (gameObj.getInviteParam as (key: string) => string | null)("roomId");
           }
         }
       } catch (e) {
@@ -123,15 +124,16 @@ export default function App() {
       try {
         const SDKObj =
           typeof window !== "undefined" && window.CrazyGames
-            ? (window.CrazyGames.SDK as any)
+            ? (window.CrazyGames.SDK as Record<string, unknown>)
             : null;
         if (
           SDKObj &&
           SDKObj.code !== "sdkNotInitialized" &&
           SDKObj.code !== "sdkDisabled"
         ) {
-          if (SDKObj.game && typeof SDKObj.game.inviteLink === "function") {
-            const link = SDKObj.game.inviteLink({ roomId });
+          const gameObj = SDKObj.game as Record<string, unknown>;
+          if (gameObj && typeof gameObj.inviteLink === "function") {
+            const link = (gameObj.inviteLink as (args: { roomId: string }) => string)({ roomId });
             navigator.clipboard.writeText(link);
           } else {
             navigator.clipboard.writeText(roomId);
@@ -234,7 +236,7 @@ export default function App() {
           gameObj.addSettingsChangeListener(
             (settings: { muteAudio?: boolean }) => {
               if (settings && typeof settings.muteAudio === "boolean") {
-                soundManager.setMuted(settings.muteAudio);
+                soundManager.setCrazyGamesMuted(settings.muteAudio);
               }
             },
           );

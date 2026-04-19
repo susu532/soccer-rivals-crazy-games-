@@ -16,6 +16,7 @@ class SoundManager {
   private isMusicPlaying = false;
   private isUserSettingsMuted = false;
   private isAdMuted = false;
+  private isCrazyGamesMuted = false;
   private nextNoteTime = 0;
   private musicStep = 0;
   private musicTimer: number | null = null;
@@ -93,7 +94,7 @@ class SoundManager {
 
   private updateMasterGain() {
     if (this.ctx && this.masterGain) {
-      const isMuted = this.isUserSettingsMuted || this.isAdMuted;
+      const isMuted = this.isUserSettingsMuted || this.isAdMuted || this.isCrazyGamesMuted;
       this.masterGain.gain.setValueAtTime(isMuted ? 0 : this.volume, this.ctx.currentTime);
     }
   }
@@ -111,13 +112,18 @@ class SoundManager {
     this.updateMasterGain();
   }
 
+  setCrazyGamesMuted(muted: boolean) {
+    this.isCrazyGamesMuted = muted;
+    this.updateMasterGain();
+  }
+
   setAdMuted(muted: boolean) {
     this.isAdMuted = muted;
     this.updateMasterGain();
   }
 
   get isMuted() {
-    return this.isUserSettingsMuted || this.isAdMuted;
+    return this.isUserSettingsMuted || this.isAdMuted || this.isCrazyGamesMuted;
   }
 
   playKick() {
