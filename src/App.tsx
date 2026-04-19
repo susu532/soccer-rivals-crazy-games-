@@ -514,9 +514,10 @@ export default function App() {
           joystickX * joystickX + joystickZ * joystickZ,
         );
 
-        // The library returns values up to the radius (size/2)
-        const radius = window.innerWidth < 640 ? 40 : 50;
-        const deadzone = 5;
+        // Auto-detect if the library is returning raw pixels (e.g. max 50) or normalized floats (e.g. max 1)
+        const isNormalized = magnitude > 0 && magnitude <= 1.5;
+        const radius = isNormalized ? 1 : (window.innerWidth < 640 ? 40 : 55);
+        const deadzone = isNormalized ? 0.1 : 5;
 
         if (magnitude > deadzone) {
           // Normalize and scale to 0-1 range
