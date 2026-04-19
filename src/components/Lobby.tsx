@@ -287,6 +287,13 @@ export function Lobby() {
   const exp = useGameStore((state) => state.exp);
   const addCoins = useGameStore((state) => state.addCoins);
   const [isWatchingAd, setIsWatchingAd] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState(false);
+
+  const handleCopyId = () => {
+    navigator.clipboard.writeText('#susuxo');
+    setCopiedId(true);
+    setTimeout(() => setCopiedId(false), 2000);
+  };
 
   const level = Math.floor(exp / 100) + 1;
   const expInLevel = exp % 100;
@@ -402,14 +409,36 @@ export function Lobby() {
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-vibrant-cyan/20 blur-[100px] rounded-full animate-pulse" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-vibrant-yellow/20 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
       
-      {/* Bottom Left: Copyright */}
-      <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 z-50 pointer-events-none">
-        <p className="text-[8px] md:text-[10px] text-white/30 font-black italic uppercase tracking-widest">
-          © 2026 hentertrabelsi - All Rights Reserved
-        </p>
-         <p className="text-[8px] md:text-[10px] text-white/30 font-black italic uppercase tracking-widest">
-          Discord: #susuxo
-        </p>
+      {/* Bottom Left: Footer Info */}
+      <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 z-50 flex flex-col gap-1">
+        <div className="flex items-center gap-2">
+          <p className="text-[7px] md:text-[9px] text-white/20 font-black italic uppercase tracking-[0.2em]">
+            © 2026 hentertrabelsi
+          </p>
+          <span className="w-1 h-3 border-l border-white/5" />
+          <button 
+            onClick={handleCopyId}
+            className="flex items-center gap-1 text-[7px] md:text-[9px] text-white/30 hover:text-white transition-colors cursor-pointer group"
+          >
+           
+            {copiedId && (
+              <motion.span 
+                initial={{ opacity: 0, x: -5 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="text-[6px] md:text-[8px] text-vibrant-yellow font-black uppercase"
+              >
+                Copied!
+              </motion.span>
+            )}
+          </button>
+        </div>
+        <div className="flex items-center gap-2">
+        
+           <span className="w-1 h-1 rounded-full bg-white/5" />
+           <p className="text-[7px] md:text-[9px] text-white/10 font-black italic uppercase tracking-widest">
+            v1.2.4-stable
+           </p>
+        </div>
       </div>
       
       {/* Top Left: Settings & Region */}

@@ -14,7 +14,8 @@ class SoundManager {
   private volume: number = 0.5;
   
   private isMusicPlaying = false;
-  private isMuted = false;
+  private isUserSettingsMuted = false;
+  private isAdMuted = false;
   private nextNoteTime = 0;
   private musicStep = 0;
   private musicTimer: number | null = null;
@@ -24,7 +25,7 @@ class SoundManager {
       this.ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
       this.masterGain = this.ctx.createGain();
       this.masterGain.connect(this.ctx.destination);
-      this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : this.volume, this.ctx.currentTime);
+      this.updateMasterGain();
     }
     if (this.ctx.state === 'suspended') {
       this.ctx.resume();
@@ -90,21 +91,33 @@ class SoundManager {
     this.musicTimer = window.setTimeout(() => this.scheduleMusic(), lookahead);
   }
 
+  private updateMasterGain() {
+    if (this.ctx && this.masterGain) {
+      const isMuted = this.isUserSettingsMuted || this.isAdMuted;
+      this.masterGain.gain.setValueAtTime(isMuted ? 0 : this.volume, this.ctx.currentTime);
+    }
+  }
+
   setVolume(volume: number) {
     this.volume = volume;
-    if (this.ctx && this.masterGain) {
-      this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : volume, this.ctx.currentTime);
-    }
+    this.updateMasterGain();
     if (this.musicGain && this.ctx) {
       this.musicGain.gain.setValueAtTime(volume * 0.15, this.ctx.currentTime);
     }
   }
 
   setMuted(muted: boolean) {
-    this.isMuted = muted;
-    if (this.ctx && this.masterGain) {
-      this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : this.volume, this.ctx.currentTime);
-    }
+    this.isUserSettingsMuted = muted;
+    this.updateMasterGain();
+  }
+
+  setAdMuted(muted: boolean) {
+    this.isAdMuted = muted;
+    this.updateMasterGain();
+  }
+
+  get isMuted() {
+    return this.isUserSettingsMuted || this.isAdMuted;
   }
 
   playKick() {

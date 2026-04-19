@@ -65,9 +65,52 @@ export default function App() {
     prevRoomIdRef.current = roomId;
   }, [roomId]);
 
+  const hasCheckedInvite = useRef(false);
+
+  useEffect(() => {
+    if (!hasCheckedInvite.current) {
+      hasCheckedInvite.current = true;
+      let roomIdFromParams: string | null = null;
+      try {
+        const SDKObj = (typeof window !== 'undefined' && window.CrazyGames) ? window.CrazyGames.SDK as any : null;
+        if (SDKObj && SDKObj.code !== 'sdkNotInitialized' && SDKObj.code !== 'sdkDisabled') {
+           if (SDKObj.game && typeof SDKObj.game.getInviteParam === 'function') {
+              roomIdFromParams = SDKObj.game.getInviteParam('roomId');
+           }
+        }
+      } catch (e) {
+        console.warn('Failed to parse from CrazyGames SDK getInviteParam', e);
+      }
+      
+      if (!roomIdFromParams) {
+         roomIdFromParams = new URLSearchParams(window.location.search).get('roomId');
+      }
+
+      if (roomIdFromParams) {
+         useGameStore.getState().setJoinMode('join', roomIdFromParams);
+         useGameStore.getState().setInLobby(false);
+      }
+    }
+  }, []);
+
   const handleCopyRoom = () => {
     if (roomId) {
-      navigator.clipboard.writeText(roomId);
+      try {
+        const SDKObj = (typeof window !== 'undefined' && window.CrazyGames) ? window.CrazyGames.SDK as any : null;
+        if (SDKObj && SDKObj.code !== 'sdkNotInitialized' && SDKObj.code !== 'sdkDisabled') {
+           if (SDKObj.game && typeof SDKObj.game.inviteLink === 'function') {
+              const link = SDKObj.game.inviteLink({ roomId });
+              navigator.clipboard.writeText(link);
+           } else {
+              navigator.clipboard.writeText(roomId);
+           }
+        } else {
+           navigator.clipboard.writeText(roomId);
+        }
+      } catch (e) {
+        console.warn('CrazyGames invite link error', e);
+        navigator.clipboard.writeText(roomId);
+      }
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -520,12 +563,13 @@ export default function App() {
           
           {roomId && isPrivate && (
             <div className="bg-black/40 text-white px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/10 shadow-lg pointer-events-auto flex flex-col items-end">
-              <span className="text-[8px] sm:text-[10px] text-white/40 font-black uppercase italic tracking-widest">PRIVATE ROOM CODE</span>
+              <span className="text-[8px] sm:text-[10px] text-white/40 font-black uppercase italic tracking-widest">INVITE LINK / ROOM CODE</span>
               <div className="flex items-center gap-2">
                 <span className="text-sm sm:text-lg font-black tracking-widest text-vibrant-yellow select-all">{roomId}</span>
                 <button 
                   onClick={handleCopyRoom}
                   className="p-1 hover:bg-white/10 rounded-md transition-colors text-white/40 hover:text-vibrant-cyan"
+                  title="Copy Invite Link"
                 >
                   {copied ? <Check size={14} className="text-vibrant-cyan" /> : <Copy size={14} />}
                 </button>

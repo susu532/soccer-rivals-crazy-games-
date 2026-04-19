@@ -39,6 +39,15 @@ export function SettingsModal({ isOpen, onClose, minimal = false }: SettingsModa
   };
 
   const [bindingKey, setBindingKey] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState(false);
+
+  const handleCopyId = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigator.clipboard.writeText('#susuxo');
+    setCopiedId(true);
+    setTimeout(() => setCopiedId(false), 2000);
+  };
 
   useEffect(() => {
     if (!bindingKey) return;
@@ -249,6 +258,59 @@ export function SettingsModal({ isOpen, onClose, minimal = false }: SettingsModa
                       />
                     </div>
                   </button>
+                </div>
+              </section>
+
+              {/* Legal & Social */}
+              <section className="space-y-4">
+                <div className="flex items-center gap-2 text-white/60">
+                  <Globe size={16} />
+                  <h3 className="text-xs font-black uppercase tracking-widest">Legal & Community</h3>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div 
+                    onClick={handleCopyId}
+                    className="relative flex flex-col items-center justify-center p-4 rounded-2xl bg-[#5865F2]/10 border border-[#5865F2]/20 hover:bg-[#5865F2]/20 transition-all text-[#5865F2] group cursor-pointer"
+                  >
+                    <span className="font-black italic uppercase text-xs">Join Discord</span>
+                    <span className="text-[8px] font-bold opacity-50 uppercase tracking-widest mt-1">
+                      {copiedId ? 'Copied!' : 'ID: #susuxo'}
+                    </span>
+                    <a 
+                      href="https://discord.gg/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="absolute top-2 right-2 text-[8px] opacity-0 group-hover:opacity-100 transition-opacity bg-[#5865F2] text-white px-2 py-0.5 rounded-full font-black uppercase"
+                    >
+                      Open
+                    </a>
+                  </div>
+                  <a 
+                    href="mailto:hentertrabelsi@gmail.com" 
+                    className="flex flex-col items-center justify-center p-4 rounded-2xl bg-vibrant-cyan/10 border border-vibrant-cyan/20 hover:bg-vibrant-cyan/20 transition-all text-vibrant-cyan group cursor-pointer"
+                  >
+                    <span className="font-black italic uppercase text-xs">Support Email</span>
+                    <span className="text-[8px] font-bold opacity-50 uppercase tracking-widest mt-1">hentertrabelsi@gmail.com</span>
+                  </a>
+                </div>
+                
+                <div className="flex items-center justify-center gap-6 pt-2">
+                  <a 
+                    href="#" 
+                    onClick={(e) => { e.preventDefault(); /* Open a modal or real link */ }}
+                    className="text-[10px] font-black uppercase tracking-widest text-white/20 hover:text-vibrant-cyan transition-colors"
+                  >
+                    Privacy Policy
+                  </a>
+                  <div className="w-1 h-1 rounded-full bg-white/10" />
+                  <a 
+                    href="#" 
+                    onClick={(e) => { e.preventDefault(); }}
+                    className="text-[10px] font-black uppercase tracking-widest text-white/20 hover:text-vibrant-cyan transition-colors"
+                  >
+                    Terms of Service
+                  </a>
                 </div>
               </section>
             </div>
