@@ -8,7 +8,7 @@
  * sell copies of the Software without explicit permission.
  */
 
-import React, { useEffect, useState, useRef } from "react";
+!import React, { useEffect, useState, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import { Scene } from "./components/Scene";
 import { Lobby } from "./components/Lobby";
